@@ -1,0 +1,4 @@
+library(MLSeq)
+filepath <- system.file("extdata/COVID.txt", package = "MLSeq")
+COVID <- read.table(filepath, header=TRUE)
+head(COVID[ ,1:10]) # Mapped counts for first 6 features of 10 subjects.
