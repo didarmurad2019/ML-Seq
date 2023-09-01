@@ -1,6 +1,31 @@
+# MLSeq package can be loaded
 library(MLSeq)
+# Define the file path with using system.file:
 filepath <- system.file("extdata/COVID.txt", package = "MLSeq")
+# Next, we can load the data using read.table
 COVID <- read.table(filepath, header=TRUE)
+# After loading the data, one can check the counts as follows. These counts are the number of mapped miRNA reads to each transcript.
 head(COVID[ ,1:10]) # Mapped counts for first 6 features of 10 subjects.
+# We need to create a class label information in order to apply classification models. The class labels are stored in a DataFrame object   # generated using DataFrame from S4Vectors. Although the formal object returned from data.frame can be imported into DESeqDataSet, we      # suggest using DataFrame in order to prevent possible warnings/errors during downstream analyses.
+class <- DataFrame(condition = factor(rep(c("N","T"), c(29, 29))))
+class
+# Define the splitting ratio before continue with the classification models
+library(DESeq2)
+set.seed(2128)
+# We do not perform a differential expression analysis to select differentially expressed genes. However, in practice, DE analysis might # be performed before fitting classifiers. Here, we selected top 100 features having the highest gene-wise variances in order to decrease # computational cost.
+vars <- sort(apply(cervical, 1, var, na.rm = TRUE), decreasing = TRUE)
+data <- cervical[names(vars)[1:100], ]
+nTest <- ceiling(ncol(data) * 0.3)
+ind <- sample(ncol(data), nTest, FALSE)
+# Minimum count is set to 1 in order to prevent 0 division problem within classification models.
+data.train <- as.matrix(data[ ,-ind] + 1)
+data.test <- as.matrix(data[ ,ind] + 1)
+classtr <- DataFrame(condition = class[-ind, ])
+classts <- DataFrame(condition = class[ind, ])
+# The training and test sets are stored in a DESeqDataSet using related functions from DESeq2 [7]. This object is then used as input for # MLSeq.  
+data.trainS4 = DESeqDataSetFromMatrix(countData = data.train, colData = classtr,
+design = formula(~condition))
+data.testS4 = DESeqDataSetFromMatrix(countData = data.test, colData = classts,
+design = formula(~condition))
 
 
