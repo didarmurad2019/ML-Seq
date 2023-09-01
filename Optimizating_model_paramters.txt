@@ -1,0 +1,46 @@
+set.seed(2128)
+# Support vector machines with radial basis function kernel
+fit.svm <- classify(data = data.trainS4, method = "svmRadial",
+preProcessing = "deseq-vst", ref = "T", tuneLength = 10,
+control = trainControl(method = "repeatedcv", number = 5,
+repeats = 10, classProbs = TRUE))
+show(fit.svm)
+##
+## An object of class "MLSeq"
+## Model Description: Support Vector Machines with Radial Basis Function Kernel (svmRadial)
+##
+## Method : svmRadial
+##
+## Accuracy(%) : 95
+## Sensitivity(%) : 94.12
+## Specificity(%) : 95.65
+##
+## Reference Class : T
+trained(fit.svm)
+## Support Vector Machines with Radial Basis Function Kernel
+##
+## 40 samples
+## 100 predictors
+## 2 classes: 'N', 'T'
+##
+## No pre-processing
+## Resampling: Cross-Validated (5 fold, repeated 10 times)
+## Summary of sample sizes: 31, 33, 32, 32, 32, 32, ...
+## Resampling results across tuning parameters:
+##
+## C Accuracy Kappa
+## 0.25 0.8424603 0.6937976
+## 0.50 0.9103571 0.8204990
+## 1.00 0.9329365 0.8639560
+## 2.00 0.9486508 0.8933900
+## 4.00 0.9433730 0.8801816
+## 8.00 0.9505952 0.8975496
+## 16.00 0.9461508 0.8889782
+## 32.00 0.9458730 0.8870002
+## 64.00 0.9360714 0.8668239
+## 128.00 0.9405159 0.8725831
+##
+## Tuning parameter 'sigma' was held constant at a value of 0.006054987
+## Accuracy was used to select the optimal model using the largest value.
+## The final values used for the model were sigma = 0.006054987 and C = 8.
+plot(fit.svm)
