@@ -1,0 +1,17 @@
+# Define control list
+ctrl.svm <- trainControl(method = "repeatedcv", number = 5, repeats = 1)
+ctrl.plda <- discreteControl(method = "repeatedcv", number = 5, repeats = 1,
+tuneLength = 10)
+ctrl.voomDLDA <- voomControl(method = "repeatedcv", number = 5, repeats = 1,
+tuneLength = 10)
+# Support vector machines with radial basis function kernel
+fit.svm <- classify(data = data.trainS4, method = "svmRadial",
+preProcessing = "deseq-vst", ref = "T", tuneLength = 10,
+control = ctrl.svm)
+# Poisson linear discriminant analysis
+fit.plda <- classify(data = data.trainS4, method = "PLDA", normalize = "deseq",
+ref = "T", control = ctrl.plda)
+# Voom-based diagonal linear discriminant analysis
+fit.voomDLDA <- classify(data = data.trainS4, method = "voomDLDA",
+normalize = "deseq", ref = "T", control = ctrl.voomDLDA)
+trained(fit.voomDLDA)
