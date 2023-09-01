@@ -1,10 +1,12 @@
 #Normalization and transformation
 # Support Vector Machines with Radial Kernel
-fit <- classify(data = data.trainS4, method = "svmRadial",preProcessing = "deseq-rlog", ref = "T",control = trainControl(method = "repeatedcv", number = 2,
+fit <- classify(data = data.trainS4, method = "svmRadial",preProcessing = "deseq-rlog", 
+ref = "T",control = trainControl(method = "repeatedcv", number = 2,
 repeats = 2, classProbs = TRUE))
 show(fit)
 
 set.seed(2128)
 # Voom based Nearest Shrunken Centroids.
-fit <- classify(data = data.trainS4, method = "voomNSC", normalize = "deseq", ref = "T", control = voomControl(tuneLength = 20))
+fit <- classify(data = data.trainS4, method = "voomNSC", normalize = "deseq", 
+ref = "T", control = voomControl(tuneLength = 20))
 trained(fit) ## Trained model summary
