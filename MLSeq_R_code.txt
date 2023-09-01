@@ -28,4 +28,22 @@ design = formula(~condition))
 data.testS4 = DESeqDataSetFromMatrix(countData = data.test, colData = classts,
 design = formula(~condition))
 
-
+set.seed(2128)
+# Support vector machines with radial basis function kernel
+fit.svm <- classify(data = data.trainS4, method = "svmRadial",
+preProcessing = "deseq-vst", ref = "T", tuneLength = 10,
+control = trainControl(method = "repeatedcv", number = 5,
+repeats = 10, classProbs = TRUE))
+show(fit.svm)
+##
+## An object of class "MLSeq"
+## Model Description: Support Vector Machines with Radial Basis Function Kernel (svmRadial)
+6
+##
+## Method : svmRadial
+##
+## Accuracy(%) : 95
+## Sensitivity(%) : 94.12
+## Specificity(%) : 95.65
+##
+## Reference Class : T
